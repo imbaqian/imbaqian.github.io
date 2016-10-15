@@ -3,10 +3,22 @@ layout: post
 title: 文件特殊权限
 ---
 
-h1. {{ page.title }}
+{{ page.title }}
+
+<p class="meta">2016-10-15 长安大学 </p>
 
 文件的权限中除了常见的r,w,x 这三个读，写，执行之外，还有三个特殊的权限:SUID, SGID, SBIT
 
+* 4 为 SUID
+* 2 为 SGID
+* 1 为 SBIT
+
+用 chmod 7666 filename 修改权限，在前面再加一个数字去表示。
+
+* chmod u+s 添加SUID权限
+* chmod g+s 添加SGID权限
+* chmod o+t 添加SBIT权限
+   
 ##SUID
 
 这个标志会出现在文件所有者的x权限上，例如：/bin/ping 这个程序的权限就是 -rwsr-xr-x
@@ -52,4 +64,4 @@ sudo chmod u+s ping 这样就可以在ping程序运行的时候具有root权限�
 
 * 当用户在该目录下创建文件或者目录时， 仅有自己和root才有权利删除该文件；
 
-/tmp 目录就是设置了SBIT
+例如 /tmp 目录就是设置了SBIT

@@ -12,14 +12,14 @@ title: Python with expression as target
 类似于C++的RAII(Resource Acquisition Is Initialization，资源获取就是初始化)
 C++标准保证在任何情况下，已构造的对象最终会销毁，即它的西沟函数最终会被调用。也就是说在构造一个对象时候获取资源，在对象生命周期结束时候释放资源(析构)。
 
-{% highlight Python linenos %}
+{% highlight Python %}
 with VAR = EXPR:
     BLOCK
 {% endhighlight %}
 
 之后被解释为:
 
-{% highlight Python linenos %}
+{% highlight Python %}
 VAR= EXPR:
 VAR.__enter__()
 try:
@@ -29,7 +29,7 @@ finally:
 {% endhighlight %}
 
 举个例子:
-{% highlight Python linenos %}
+{% highlight Python %}
 with open(filename) as fp:
     BLOCK1
 BLOCK2
@@ -44,7 +44,7 @@ BLOCK2
 ##context manager 上下文管理器
 
 暂时改变当前目录，然后返回使用前目录
-{% highlight Python linenos %}
+{% highlight Python %}
 from contextlib import contextmanager
 import os
 
@@ -63,7 +63,7 @@ with working_directory("data/stuff"):
 {% endhighlight %}
 
 暂时重定向sys.stdin,sys.stdout and sys.stderr到其他文件描述符，然后还原。
-{% highlight Python linenos %}
+{% highlight Python %}
 from contextlib import contextmanager
 import sys
 
@@ -91,7 +91,7 @@ print "Back to normal stdout again"
 {% endhighlight %}
 
 生成一个暂时文件夹，用完之后删除
-{% highlight Python linenos %}
+{% highlight Python %}
 from tempfile import mkdtemp
 from shutil import rmtree
 

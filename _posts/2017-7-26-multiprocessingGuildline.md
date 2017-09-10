@@ -83,7 +83,7 @@ if __name__ == '__main__':
     lock = Lock()
     for i in range(10):
         Process(target=f).start()
-{% endhightlight %}
+{% endhighlight %}
 
 
 {% highlight Python %}

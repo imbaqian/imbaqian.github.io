@@ -73,7 +73,7 @@ if __name__ == '__main__':
 
 除了让代码兼容Windows，这样做能使得这些资源在子进程中存活，父进程不会将这些资源回收。如果父进程释放这些公共资源，这样做是很重要的。
 
-{% heightlight Python %}
+{% highlight Python %}
 from multiprocessing import Process, Lock
 
 def f():
@@ -86,7 +86,7 @@ if __name__ == '__main__':
 {% endhightlight %}
 
 
-{% heightlight Python %}
+{% highlight Python %}
 from multiprocessing import Process, Lock
 
 def f(l):
@@ -97,28 +97,28 @@ if __name__ == '__main__':
     for i in range(10):
         Process(target=f, args=(lock,)).start()
 
-{% endheightlight %}
+{% endhighlight %}
 
 ### 谨防用文件对象替换sys.stdin
 
 multiprocessing原本无条件的叫做:
 
-{% heightlight Python %}
+{% highlight Python %}
 os.close(sys.stdin.fileno())
-{% endheightlight %}
+{% endhighlight %}
 
 在multiprocessing.Process._bootstrap()中，这导致了进程中的问题。变成了:
 
-{% heightlight Python %}
+{% highlight Python %}
 sys.stdin.close()
 sys.stdin = open(os.open(os.devnull, os.O_RDONLY), closefd=False)
-{% endheightlight %}
+{% endhighlight %}
 
 Which solves the fundamental issue of processes colliding with each other resulting in a bad file descriptor error, but introduces a potential danger to applications which replace sys.stdin() with a “file-like object” with output buffering. This danger is that if multiple processes call close() on this file-like object, it could result in the same data being flushed to the object multiple times, resulting in corruption.
 
 If you write a file-like object and implement your own caching, you can make it fork-safe by storing the pid whenever you append to the cache, and discarding the cache when the pid changes. For example:
 
-{% heightlight Python %}
+{% highlight Python %}
 @property
 def cache(self):
     pid = os.getpid()
@@ -126,7 +126,7 @@ def cache(self):
         self._pid = pid
         self._cache = []
     return self._cache
-{% endheightlight %}
+{% endhighlight %}
 
 ## spawn和forkserver启动方法
 
@@ -150,7 +150,7 @@ def cache(self):
 
 例如，使用spawn或forkserver启动一个进程会有RuntimeError：
 
-{% heightlight Python %}
+{% highlight Python %}
 from multiprocessing import Process
 
 def foo():
@@ -158,11 +158,11 @@ def foo():
 
 p = Process(target=foo)
 p.start()
-{% endheightlight %}
+{% endhighlight %}
 
 使用if \_\_name\_\_ == '\_\_main\_\_':
 
-{% heightlight Python %}
+{% highlight Python %}
 from multiprocessing import Process, freeze_support, set_start_method
 
 def foo():
@@ -173,4 +173,4 @@ if __name__ == '__main__':
     set_start_method('spawn')
     p = Process(target=foo)
     p.start()
-{% endheightlight %}
+{% endhighlight %}

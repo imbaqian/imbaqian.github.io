@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Multiprocessing Guildelines</title>
+   <link href="/images/icon/1.ico" rel="shortcut icon" />
+   <meta name="author" content="imbaqian" />
+   <!-- syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/syntax.css" type="text/css" />
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+
+<body class = "site">
+    <!-- header -->
+    <header class="title">
+      <a class="extra" href="/">Home</a>
+    </header>
+
+    <div id="post">
+<p>Multiprocessing Guildelines</p>
+
+<p class="meta">2017-7-26 府谷-家 </p>
+
+<h1 id="programming-guildelines">Programming guildelines</h1>
+<hr />
+<p>简单的翻译了一下，还有一些没看懂没翻译…
+—
+这是在使用multiprocessing之前的指南和习惯</p>
+
+<h3 id="avoid-shared-state-避免使用共享状态">Avoid shared state 避免使用共享状态</h3>
+
+<p>尽可能避免在进程之间传递大量的数据。</p>
+
+<p>最好坚持是要用queues或者pipes在进程之间通信，而不是使用低等级的同步原语。</p>
+
+<h3 id="picklability">Picklability</h3>
+
+<p>确保函数的参数是picklable</p>
+
+<h3 id="thread-safety-of-proxies-代理线程安全">Thread safety of proxies 代理线程安全</h3>
+
+<p>不要在超过一个线程里使用代理对象，除非你用锁</p>
+
+<p>（在不同的线程里使用相同的代理是不会有问题的）</p>
+
+<h3 id="joining-zombie-processes">Joining zombie processes</h3>
+
+<p>在UNIX中，当一个进程结束了但是没有被join，这个进程将会成为僵尸进程。僵尸进程不会有太多，因为每次一个进程开始，所有运行完的但没有join的进程将被join。当调用一个运行完的进程的Process.is_alive时，
+该进程将被join。明确的join一个进程是一个好的习惯。</p>
+
+<h3 id="better-to-inherit-than-pickleunpickle-最好用继承而不是序列化反序列化">Better to inherit than pickle/unpickle 最好用继承而不是序列化/反序列化</h3>
+
+<p>当使用spawn或forkserver来启动一个方法，许多multiprocessing的类型需要是可序列化的，那样他们的子进程就可以使用了。然而，我们应该避免用pipes或queue传送共享对象。相反，你应该安排程序，这样一个进程需要访问共享资源就可以从它的祖先进程继承了。</p>
+
+<h3 id="avoid-terminating-processes-避免结束进程">Avoid terminating processes 避免结束进程</h3>
+
+<p>使用Process.terminate方法结束一个进程容易导致正在使用的共享资源（例如锁，信号量，管道，队列等）被损坏或者无法被其他进程使用。</p>
+
+<p>Process.terminate最好用在那些没有使用共享资源的进程。</p>
+
+<h3 id="joining-processes-that-use-queues">Joining processes that use queues</h3>
+
+<p>记住，一个进程在queue中放入资源，必须等到消费这个资源的程序结束。</p>
+
+<p>也就是，当你在queue中放入东西后，必须等到queue中的东西出去后才能join你的进程。不然你不能确保你放东西在queue的进程会结束。也记住non-daemonic进程会被自动join。</p>
+
+<p>一个死锁的例子：</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span><span class="p">,</span> <span class="n">Queue</span>
+
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">q</span><span class="p">):</span>
+    <span class="n">q</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">'X'</span> <span class="o">*</span> <span class="mi">1000000</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">queue</span><span class="p">,))</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>                    <span class="c"># this deadlocks</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span></code></pre></figure>
+
+<p>将最后两行交换就可以解决死锁</p>
+
+<h3 id="明确的传递资源到子进程">明确的传递资源到子进程</h3>
+
+<p>在Unix上使用fork方法时，子进程能使用在父进程中创建的共享资源，然而最好通过参数的方式传递这些资源到子进程。</p>
+
+<p>除了让代码兼容Windows，这样做能使得这些资源在子进程中存活，父进程不会将这些资源回收。如果父进程释放这些公共资源，这样做是很重要的。</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span><span class="p">,</span> <span class="n">Lock</span>
+
+<span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="o">...</span> <span class="n">do</span> <span class="n">something</span> <span class="n">using</span> <span class="s">"lock"</span> <span class="o">...</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span><span class="p">,</span> <span class="n">Lock</span>
+
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+    <span class="o">...</span> <span class="n">do</span> <span class="n">something</span> <span class="n">using</span> <span class="s">"l"</span> <span class="o">...</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">lock</span><span class="p">,))</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></code></pre></figure>
+
+<h3 id="谨防用文件对象替换sysstdin">谨防用文件对象替换sys.stdin</h3>
+
+<p>multiprocessing原本无条件的叫做:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">fileno</span><span class="p">())</span></code></pre></figure>
+
+<p>在multiprocessing.Process._bootstrap()中，这导致了进程中的问题。变成了:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">stdin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">O_RDONLY</span><span class="p">),</span> <span class="n">closefd</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span></code></pre></figure>
+
+<p>Which solves the fundamental issue of processes colliding with each other resulting in a bad file descriptor error, but introduces a potential danger to applications which replace sys.stdin() with a “file-like object” with output buffering. This danger is that if multiple processes call close() on this file-like object, it could result in the same data being flushed to the object multiple times, resulting in corruption.</p>
+
+<p>If you write a file-like object and implement your own caching, you can make it fork-safe by storing the pid whenever you append to the cache, and discarding the cache when the pid changes. For example:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="nd">@property</span>
+<span class="k">def</span> <span class="nf">cache</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">pid</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">pid</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pid</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pid</span> <span class="o">=</span> <span class="n">pid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span></code></pre></figure>
+
+<h2 id="spawn和forkserver启动方法">spawn和forkserver启动方法</h2>
+
+<p>这些限制不适用于fork方法。</p>
+
+<h3 id="更多picklablity">更多picklablity</h3>
+
+<p>确保Process.__init__()的参数是picklable。这意味着绑定和解绑方法不能直接用在target（除非你用fork方法）——定义一个函数来替代。</p>
+
+<p>如果你继承Process然后确保实例是picklable，当你调用Process.start</p>
+
+<h3 id="global-variables">Global variables</h3>
+
+<p>切记如果子进程访问一个全局变量，它有可能和父进程中的值不一样。</p>
+
+<p>当全局变量是模块级别的常量是没问题的。</p>
+
+<h3 id="safe-importing-of-main-module">Safe importing of main module</h3>
+
+<p>确保main模块被安全的导入一个新的Python解释器，这样不会导致一些副作用。</p>
+
+<p>例如，使用spawn或forkserver启动一个进程会有RuntimeError：</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span>
+
+<span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'hello'</span><span class="p">)</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">foo</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></code></pre></figure>
+
+<p>使用if __name__ == ‘__main__’:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span><span class="p">,</span> <span class="n">freeze_support</span><span class="p">,</span> <span class="n">set_start_method</span>
+
+<span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'hello'</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">freeze_support</span><span class="p">()</span>
+    <span class="n">set_start_method</span><span class="p">(</span><span class="s">'spawn'</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">foo</span><span class="p">)</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></code></pre></figure>
+
+</div>
+
+
+
+
+    <!-- 填充物 -->
+    <div class="site-content"></div>
+    <!-- footer -->
+    <footer class="footer">
+      <div class="contact">
+        <p>
+          GitHub:<br/>
+          Email:
+        </p>
+      </div>
+      <div class="contact">
+        <p>
+          <a href="http://github.com/imbaqian/">github.com/imbaqian</a> <br/>
+          <a>sqian416@163.com</a> <br/>
+        </p>
+      </div>
+    </footer>
+
+  
+</body>
+</html>

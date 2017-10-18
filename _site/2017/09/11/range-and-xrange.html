@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
 <head>
    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-   <title>{{ page.title }}</title>
+   <title>range and xrange</title>
    <link href="/images/icon/1.ico" rel="shortcut icon" />
    <meta name="author" content="imbaqian" />
    <!-- syntax highlighting CSS -->
@@ -18,7 +18,33 @@
       <a class="extra" href="/">Home</a>
     </header>
 
-    {{ content }}
+    <div id="post">
+<p>range and xrange</p>
+
+<p class="meta">2017-9-11 府谷-家 </p>
+
+<h1 id="python2x">Python2.x</h1>
+<hr />
+<h2 id="range">range</h2>
+
+<p>range(1,10) 生成一个list[1,10)</p>
+
+<h2 id="xrange">xrange</h2>
+
+<p>xrange(1,10) 是一个Generator，相比range更节省空间</p>
+
+<h1 id="python3x">Python3.x</h1>
+<hr />
+<blockquote>
+  <p>Renames xrange() to range() and wraps existing range() calls with list.</p>
+</blockquote>
+
+<p>xrange 改名为 range，用list(range())来调用以前的range</p>
+
+</div>
+
+
+
 
     <!-- 填充物 -->
     <div class="site-content"></div>

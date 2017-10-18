@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
 <head>
    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-   <title>{{ page.title }}</title>
+   <title>sys.stdin read binary</title>
    <link href="/images/icon/1.ico" rel="shortcut icon" />
    <meta name="author" content="imbaqian" />
    <!-- syntax highlighting CSS -->
@@ -18,7 +18,23 @@
       <a class="extra" href="/">Home</a>
     </header>
 
-    {{ content }}
+    <div id="post">
+<p>sys.stdin read binary</p>
+
+<p class="meta">2017-9-9 府谷-家 </p>
+
+<h1 id="python3-sysstdin-mode">Python3 sys.stdin mode</h1>
+
+<p>在windows下，sys.stdin mode 为 r</p>
+
+<p>将r 改为 rb：</p>
+
+<p>sys.stdin = os.fdope(sys.stdin.fileno(), ‘rb’, 0)</p>
+
+</div>
+
+
+
 
     <!-- 填充物 -->
     <div class="site-content"></div>

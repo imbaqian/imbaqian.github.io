@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Python with expression as target</title>
+   <link href="/images/icon/1.ico" rel="shortcut icon" />
+   <meta name="author" content="imbaqian" />
+   <!-- syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/syntax.css" type="text/css" />
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+
+<body class = "site">
+    <!-- header -->
+    <header class="title">
+      <a class="extra" href="/">Home</a>
+    </header>
+
+    <div id="post">
+<p>Python with expression as target</p>
+
+<p class="meta">2017-7-10 府谷-家 </p>
+
+<h1 id="with-expression-as-target">with expression as target:</h1>
+
+<p>类似于C++的RAII(Resource Acquisition Is Initialization，资源获取就是初始化)
+C++标准保证在任何情况下，已构造的对象最终会销毁，即它的西沟函数最终会被调用。也就是说在构造一个对象时候获取资源，在对象生命周期结束时候释放资源(析构)。</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">with</span> <span class="n">VAR</span> <span class="o">=</span> <span class="n">EXPR</span><span class="p">:</span>
+    <span class="n">BLOCK</span></code></pre></figure>
+
+<p>之后被解释为:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">VAR</span><span class="o">=</span> <span class="n">EXPR</span><span class="p">:</span>
+<span class="n">VAR</span><span class="o">.</span><span class="n">__enter__</span><span class="p">()</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">BLOCK</span>
+<span class="k">finally</span><span class="p">:</span>
+    <span class="n">VAR</span><span class="o">.</span><span class="n">__exit__</span><span class="p">()</span></code></pre></figure>
+
+<p>举个例子:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+    <span class="n">BLOCK1</span>
+<span class="n">BLOCK2</span></code></pre></figure>
+
+<p>通过fp.closed成员可以看到:
+    BLOCK1中，fp是打开的
+    BLOCK2中，fp是关闭的</p>
+
+<p>类似的还有 with lock: 锁 等等…</p>
+
+<p>##context manager 上下文管理器</p>
+
+<p>暂时改变当前目录，然后返回使用前目录</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="nd">@contextmanager</span>
+<span class="k">def</span> <span class="nf">working_directory</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="n">current_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">yield</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">current_dir</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">working_directory</span><span class="p">(</span><span class="s">"data/stuff"</span><span class="p">):</span>
+    <span class="c"># do something within data/stuff</span>
+<span class="c"># here I am back again in the original working directory</span></code></pre></figure>
+
+<p>暂时重定向sys.stdin,sys.stdout and sys.stderr到其他文件描述符，然后还原。</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="nd">@contextmanager</span>
+<span class="k">def</span> <span class="nf">redirected</span><span class="p">(</span><span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+    <span class="n">stream_names</span> <span class="o">=</span> <span class="p">[</span><span class="s">"stdin"</span><span class="p">,</span> <span class="s">"stdout"</span><span class="p">,</span> <span class="s">"stderr"</span><span class="p">]</span>
+    <span class="n">old_streams</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">sname</span> <span class="ow">in</span> <span class="n">stream_names</span><span class="p">:</span>
+            <span class="n">stream</span> <span class="o">=</span> <span class="n">kwds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sname</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">stream</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">stream</span> <span class="o">!=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="n">sname</span><span class="p">):</span>
+                <span class="n">old_streams</span><span class="p">[</span><span class="n">sname</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="n">sname</span><span class="p">)</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="n">sname</span><span class="p">,</span> <span class="n">stream</span><span class="p">)</span>
+        <span class="k">yield</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">sname</span><span class="p">,</span> <span class="n">stream</span> <span class="ow">in</span> <span class="n">old_streams</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="n">sname</span><span class="p">,</span> <span class="n">stream</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">redirected</span><span class="p">(</span><span class="n">stdout</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">"/tmp/log.txt"</span><span class="p">,</span> <span class="s">"w"</span><span class="p">)):</span>
+     <span class="c"># these print statements will go to /tmp/log.txt</span>
+     <span class="k">print</span> <span class="s">"Test entry 1"</span>
+     <span class="k">print</span> <span class="s">"Test entry 2"</span>
+<span class="c"># back to the normal stdout</span>
+<span class="k">print</span> <span class="s">"Back to normal stdout again"</span></code></pre></figure>
+
+<p>生成一个暂时文件夹，用完之后删除</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">mkdtemp</span>
+<span class="kn">from</span> <span class="nn">shutil</span> <span class="kn">import</span> <span class="n">rmtree</span>
+
+<span class="nd">@contextmanager</span>
+<span class="k">def</span> <span class="nf">temporary_dir</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">mkdtemp</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">name</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">temporary_dir</span><span class="p">()</span> <span class="k">as</span> <span class="n">dirname</span><span class="p">:</span>
+    <span class="c"># do whatever you want</span></code></pre></figure>
+
+</div>
+
+
+
+
+    <!-- 填充物 -->
+    <div class="site-content"></div>
+    <!-- footer -->
+    <footer class="footer">
+      <div class="contact">
+        <p>
+          GitHub:<br/>
+          Email:
+        </p>
+      </div>
+      <div class="contact">
+        <p>
+          <a href="http://github.com/imbaqian/">github.com/imbaqian</a> <br/>
+          <a>sqian416@163.com</a> <br/>
+        </p>
+      </div>
+    </footer>
+
+  
+</body>
+</html>

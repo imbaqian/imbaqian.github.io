@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>文件特殊权限</title>
+   <link href="/images/icon/1.ico" rel="shortcut icon" />
+   <meta name="author" content="imbaqian" />
+   <!-- syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/syntax.css" type="text/css" />
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+
+<body class = "site">
+    <!-- header -->
+    <header class="title">
+      <a class="extra" href="/">Home</a>
+    </header>
+
+    <div id="post">
+<p>文件特殊权限</p>
+
+<p class="meta">2016-10-15 长安大学 </p>
+
+<p>文件的权限中除了常见的r,w,x 这三个读，写，执行之外，还有三个特殊的权限:SUID, SGID, SBIT</p>
+
+<ul>
+  <li>4 为 SUID</li>
+  <li>2 为 SGID</li>
+  <li>1 为 SBIT</li>
+</ul>
+
+<p>用 chmod 7666 filename 修改权限，在前面再加一个数字去表示。</p>
+
+<ul>
+  <li>chmod u+s 添加SUID权限</li>
+  <li>chmod g+s 添加SGID权限</li>
+  <li>chmod o+t 添加SBIT权限</li>
+</ul>
+
+<h2 id="suid">SUID</h2>
+
+<p>这个标志会出现在文件所有者的x权限上，例如：/bin/ping 这个程序的权限就是 -rwsr-xr-x</p>
+
+<p>这个标志有以下的限制和功能:</p>
+<ul>
+  <li>
+    <p>SUID 仅对二进制(binary program)有效；</p>
+  </li>
+  <li>
+    <p>执行者要对改程序有x的可执行权限;</p>
+  </li>
+  <li>
+    <p>本权限仅在程序运行过程中(run-time)有效;</p>
+  </li>
+  <li>
+    <p>执行者将具有该程序所有者(owner)的权限;</p>
+  </li>
+</ul>
+
+<p>举个例子来说，当我们自己写一个ping程序时，里面会用到socket()函数，但是socket()必须在root权限下才能运行，
+所以当我们生成可执行的二进制文件后，将该程序的所有者改位root，即：$ sudo chown root:root ping 和
+sudo chmod u+s ping 这样就可以在ping程序运行的时候具有root权限，从而正确运行，倘若不这样也不加sudo 运行
+则会socket()创建失败.</p>
+
+<h2 id="sgid">SGID</h2>
+
+<p>这个标志出现在文件所在用户组的位置，即：-rwxr-sr-x</p>
+
+<p>这个标志有以下限制和功能:</p>
+<ul>
+  <li>
+    <p>SGID 对二进制文件有效;</p>
+  </li>
+  <li>
+    <p>程序执行者对于该程序来说，需要具备x权限;</p>
+  </li>
+  <li>
+    <p>执行者在执行的过程中将会获得改程序用户组的支持;</p>
+  </li>
+  <li>
+    <p>SGID 对目录有效；</p>
+  </li>
+  <li>
+    <p>用户对此目录有rx权限时，该用户才能进入此目录；</p>
+  </li>
+  <li>
+    <p>用户在此目录下的有效用户组(effective group) 将会变成该目录的用户组；</p>
+  </li>
+  <li>
+    <p>若用户在此目录下有w权限(可以创建文件)，则用户组所创建的新文件的用户组与此目录的用户组相同</p>
+  </li>
+</ul>
+
+<h2 id="sbit">SBIT</h2>
+
+<ul>
+  <li>
+    <p>该标志只针对目录有效;</p>
+  </li>
+  <li>
+    <p>当用户对此目录具有w，x权限，即具有写入的权限；</p>
+  </li>
+  <li>
+    <p>当用户在该目录下创建文件或者目录时， 仅有自己和root才有权利删除该文件；</p>
+  </li>
+</ul>
+
+<p>例如 /tmp 目录就是设置了SBIT</p>
+
+</div>
+
+
+
+
+    <!-- 填充物 -->
+    <div class="site-content"></div>
+    <!-- footer -->
+    <footer class="footer">
+      <div class="contact">
+        <p>
+          GitHub:<br/>
+          Email:
+        </p>
+      </div>
+      <div class="contact">
+        <p>
+          <a href="http://github.com/imbaqian/">github.com/imbaqian</a> <br/>
+          <a>sqian416@163.com</a> <br/>
+        </p>
+      </div>
+    </footer>
+
+  
+</body>
+</html>

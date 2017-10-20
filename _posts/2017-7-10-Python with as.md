@@ -12,7 +12,7 @@ title: Python with expression as target
 类似于C++的RAII(Resource Acquisition Is Initialization，资源获取就是初始化)
 C++标准保证在任何情况下，已构造的对象最终会销毁，即它的西沟函数最终会被调用。也就是说在构造一个对象时候获取资源，在对象生命周期结束时候释放资源(析构)。
 
-{% highlight Python %}
+{% highlight python %}
 with VAR = EXPR:
     BLOCK
 {% endhighlight %}
@@ -91,7 +91,7 @@ print "Back to normal stdout again"
 {% endhighlight %}
 
 生成一个暂时文件夹，用完之后删除
-{% highlight Python %}
+{% highlight  Python %}
 from tempfile import mkdtemp
 from shutil import rmtree
 

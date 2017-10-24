@@ -531,7 +531,7 @@ window.onload = function() {
          "我工作主要使用 Python/C++/C",
          '这里是我的博客<a href="./mainPage"> www.imbaqian.com </a>',
          "想找我玩的小伙伴可以邮箱联系喽~ sqian416@163.com",
-         '对我感兴趣的大老板可以看看我的简历~<a>老前的简历</a>',
+         '对我感兴趣的大老板可以看看我的简历~<a>简历</a>',
          "O(∩_∩)O哈哈~"];
     var c = function() {
         return parseInt(getComputedStyle(document.body).getPropertyValue("font-size"))

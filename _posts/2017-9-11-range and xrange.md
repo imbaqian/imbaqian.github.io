@@ -1,6 +1,7 @@
 ---
 layout: post
 title: range and xrange
+tags: [python]
 ---
 
 {{ page.title }}

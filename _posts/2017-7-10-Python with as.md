@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Python with expression as target
+tags: [python]
 ---
 
 {{ page.title }}

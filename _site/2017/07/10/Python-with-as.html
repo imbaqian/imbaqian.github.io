@@ -12,15 +12,23 @@
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
 </head>
 
+
+
+
 <body class = "site">
     <!-- header -->
     <header class="title">
-      <a class="extra" href="/mainPage">主页</a>
-      <a class="extra" href="/thoughtPage">嗯呢</a>
-      <a class="extra" href="/classifyPage">分类</a>
-      <a class="extra" href="/cv/sq.pdf">简历</a>
+  
+      <div id="navfirst">
+        <ul id="menu">
+          <li id="h"><a href="/mainPage" title="博客主页">主页</a></li>
+          <li id="b"><a href="/thoughtPage" title="随便写写">随笔</a></li>
+          <li id="s"><a href="/classifyPage" title="博文分类">分类</a></li>
+          <li id="d"><a href="/cv/sq.pdf" title="我的简历">简历</a></li>
+          </ul>
+        </div>
     </header>
-     
+  
     <div id="post">
 <p>Python with expression as target</p>
 
@@ -31,21 +39,21 @@
 <p>类似于C++的RAII(Resource Acquisition Is Initialization，资源获取就是初始化)
 C++标准保证在任何情况下，已构造的对象最终会销毁，即它的西沟函数最终会被调用。也就是说在构造一个对象时候获取资源，在对象生命周期结束时候释放资源(析构)。</p>
 
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">with</span> <span class="n">VAR</span> <span class="o">=</span> <span class="n">EXPR</span><span class="p">:</span>
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="k">with</span> <span class="n">VAR</span> <span class="o">=</span> <span class="n">EXPR</span><span class="p">:</span>
     <span class="n">BLOCK</span></code></pre></figure>
 
 <p>之后被解释为:</p>
 
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">VAR</span><span class="o">=</span> <span class="n">EXPR</span><span class="p">:</span>
-<span class="n">VAR</span><span class="o">.</span><span class="n">__enter__</span><span class="p">()</span>
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="n">VAR</span><span class="o">=</span> <span class="n">EXPR</span><span class="p">:</span>
+<span class="n">VAR</span><span class="o">.</span><span class="fm">__enter__</span><span class="p">()</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="n">BLOCK</span>
 <span class="k">finally</span><span class="p">:</span>
-    <span class="n">VAR</span><span class="o">.</span><span class="n">__exit__</span><span class="p">()</span></code></pre></figure>
+    <span class="n">VAR</span><span class="o">.</span><span class="fm">__exit__</span><span class="p">()</span></code></pre></figure>
 
 <p>举个例子:</p>
 
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
     <span class="n">BLOCK1</span>
 <span class="n">BLOCK2</span></code></pre></figure>
 
@@ -59,7 +67,7 @@ C++标准保证在任何情况下，已构造的对象最终会销毁，即它�
 
 <p>暂时改变当前目录，然后返回使用前目录</p>
 
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
 <span class="nd">@contextmanager</span>
@@ -71,18 +79,18 @@ C++标准保证在任何情况下，已构造的对象最终会销毁，即它�
     <span class="k">finally</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">current_dir</span><span class="p">)</span>
 
-<span class="k">with</span> <span class="n">working_directory</span><span class="p">(</span><span class="s">"data/stuff"</span><span class="p">):</span>
-    <span class="c"># do something within data/stuff</span>
-<span class="c"># here I am back again in the original working directory</span></code></pre></figure>
+<span class="k">with</span> <span class="n">working_directory</span><span class="p">(</span><span class="s2">&quot;data/stuff&quot;</span><span class="p">):</span>
+    <span class="c1"># do something within data/stuff</span>
+<span class="c1"># here I am back again in the original working directory</span></code></pre></figure>
 
 <p>暂时重定向sys.stdin,sys.stdout and sys.stderr到其他文件描述符，然后还原。</p>
 
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="nd">@contextmanager</span>
 <span class="k">def</span> <span class="nf">redirected</span><span class="p">(</span><span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
-    <span class="n">stream_names</span> <span class="o">=</span> <span class="p">[</span><span class="s">"stdin"</span><span class="p">,</span> <span class="s">"stdout"</span><span class="p">,</span> <span class="s">"stderr"</span><span class="p">]</span>
+    <span class="n">stream_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;stdin&quot;</span><span class="p">,</span> <span class="s2">&quot;stdout&quot;</span><span class="p">,</span> <span class="s2">&quot;stderr&quot;</span><span class="p">]</span>
     <span class="n">old_streams</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">sname</span> <span class="ow">in</span> <span class="n">stream_names</span><span class="p">:</span>
@@ -95,16 +103,16 @@ C++标准保证在任何情况下，已构造的对象最终会销毁，即它�
         <span class="k">for</span> <span class="n">sname</span><span class="p">,</span> <span class="n">stream</span> <span class="ow">in</span> <span class="n">old_streams</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="n">sname</span><span class="p">,</span> <span class="n">stream</span><span class="p">)</span>
 
-<span class="k">with</span> <span class="n">redirected</span><span class="p">(</span><span class="n">stdout</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">"/tmp/log.txt"</span><span class="p">,</span> <span class="s">"w"</span><span class="p">)):</span>
-     <span class="c"># these print statements will go to /tmp/log.txt</span>
-     <span class="k">print</span> <span class="s">"Test entry 1"</span>
-     <span class="k">print</span> <span class="s">"Test entry 2"</span>
-<span class="c"># back to the normal stdout</span>
-<span class="k">print</span> <span class="s">"Back to normal stdout again"</span></code></pre></figure>
+<span class="k">with</span> <span class="n">redirected</span><span class="p">(</span><span class="n">stdout</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/tmp/log.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)):</span>
+     <span class="c1"># these print statements will go to /tmp/log.txt</span>
+     <span class="k">print</span> <span class="s2">&quot;Test entry 1&quot;</span>
+     <span class="k">print</span> <span class="s2">&quot;Test entry 2&quot;</span>
+<span class="c1"># back to the normal stdout</span>
+<span class="k">print</span> <span class="s2">&quot;Back to normal stdout again&quot;</span></code></pre></figure>
 
 <p>生成一个暂时文件夹，用完之后删除</p>
 
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">mkdtemp</span>
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">mkdtemp</span>
 <span class="kn">from</span> <span class="nn">shutil</span> <span class="kn">import</span> <span class="n">rmtree</span>
 
 <span class="nd">@contextmanager</span>
@@ -116,7 +124,7 @@ C++标准保证在任何情况下，已构造的对象最终会销毁，即它�
         <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="n">temporary_dir</span><span class="p">()</span> <span class="k">as</span> <span class="n">dirname</span><span class="p">:</span>
-    <span class="c"># do whatever you want</span></code></pre></figure>
+    <span class="c1"># do whatever you want</span></code></pre></figure>
 
 
 </div>
@@ -143,3 +151,4 @@ C++标准保证在任何情况下，已构造的对象最终会销毁，即它�
     </footer>
 </body>
 </html>
+

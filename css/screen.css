@@ -94,8 +94,7 @@ ul.posts {
   color: #a00;
   font-weight: bold;
   margin-bottom: 2em;
-  border-bottom: 4px solid #eee;
-  height: 35px 
+  
 }
 
   .site .title a {
@@ -191,3 +190,65 @@ ul.posts {
   #related h2 {
     margin-bottom: 1em;
   }
+
+
+/* ----------------------------------- navfirst -----------------------------------*/
+div#navfirst
+{
+height: 48px;
+width: 637px;
+margin: 0 0 0 12px;
+padding: 0;
+border: 0;
+background: #E8E7E3;
+}
+
+div#navfirst ul#menu
+{
+height: 48px;
+width: 637px;
+background: transparent url(/images/bg.png) top left no-repeat;
+margin: 0;
+padding: 0;
+position: relative;
+}
+
+div#navfirst ul#menu li
+{
+margin:0;
+padding:0;
+list-style:none;
+position:absolute;
+top:0;
+}
+
+ul#menu li,ul#menu a
+{
+display: block;
+height: 48px;
+border-bottom:0;
+}
+
+div#navfirst ul#menu li a
+{
+text-indent: -9999px;
+overflow:hidden;
+text-decoration: none;
+}
+
+#h	{left:0;width:155px;}
+#b	{left:155px;width:157px;}
+#s		{left:312px;width:167px;}
+#d 	{left:479px;width:158px;}
+
+
+#h a:hover	{background: transparent url(/images/bg.png) 0 -48px no-repeat;}
+#b a:hover	{background: transparent url(/images/bg.png) -155px -48px no-repeat;}
+#s a:hover		{background: transparent url(/images/bg.png) -312px -48px no-repeat;}
+#d a:hover	{background: transparent url(/images/bg.png) -479px -48px no-repeat;}
+
+
+body.html #h					 {background: transparent url(/images/bg.png) 0 -48px no-repeat;}
+body.browserscripting #b	 {background: transparent url(/images/bg.png) -155px -48px no-repeat;}
+body.serverscripting #s		 {background: transparent url(/images/bg.png) -312px -48px no-repeat;}
+body.dotnet #d					 {background: transparent url(/images/bg.png) -479px -48px no-repeat;}

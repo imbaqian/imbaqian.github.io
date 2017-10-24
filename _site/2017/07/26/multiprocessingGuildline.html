@@ -12,15 +12,23 @@
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
 </head>
 
+
+
+
 <body class = "site">
     <!-- header -->
     <header class="title">
-      <a class="extra" href="/mainPage">主页</a>
-      <a class="extra" href="/thoughtPage">嗯呢</a>
-      <a class="extra" href="/classifyPage">分类</a>
-      <a class="extra" href="/cv/sq.pdf">简历</a>
+  
+      <div id="navfirst">
+        <ul id="menu">
+          <li id="h"><a href="/mainPage" title="博客主页">主页</a></li>
+          <li id="b"><a href="/thoughtPage" title="随便写写">随笔</a></li>
+          <li id="s"><a href="/classifyPage" title="博文分类">分类</a></li>
+          <li id="d"><a href="/cv/sq.pdf" title="我的简历">简历</a></li>
+          </ul>
+        </div>
     </header>
-     
+  
     <div id="post">
 <p>Multiprocessing Guildelines</p>
 
@@ -71,16 +79,16 @@
 
 <p>一个死锁的例子：</p>
 
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span><span class="p">,</span> <span class="n">Queue</span>
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span><span class="p">,</span> <span class="n">Queue</span>
 
 <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">q</span><span class="p">):</span>
-    <span class="n">q</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">'X'</span> <span class="o">*</span> <span class="mi">1000000</span><span class="p">)</span>
+    <span class="n">q</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s1">&#39;X&#39;</span> <span class="o">*</span> <span class="mi">1000000</span><span class="p">)</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
     <span class="n">p</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">queue</span><span class="p">,))</span>
     <span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-    <span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>                    <span class="c"># this deadlocks</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>                    <span class="c1"># this deadlocks</span>
     <span class="n">obj</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span></code></pre></figure>
 
 <p>将最后两行交换就可以解决死锁</p>
@@ -91,22 +99,22 @@
 
 <p>除了让代码兼容Windows，这样做能使得这些资源在子进程中存活，父进程不会将这些资源回收。如果父进程释放这些公共资源，这样做是很重要的。</p>
 
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span><span class="p">,</span> <span class="n">Lock</span>
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span><span class="p">,</span> <span class="n">Lock</span>
 
 <span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
-    <span class="o">...</span> <span class="n">do</span> <span class="n">something</span> <span class="n">using</span> <span class="s">"lock"</span> <span class="o">...</span>
+    <span class="o">...</span> <span class="n">do</span> <span class="n">something</span> <span class="n">using</span> <span class="s2">&quot;lock&quot;</span> <span class="o">...</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
         <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span><span class="p">,</span> <span class="n">Lock</span>
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span><span class="p">,</span> <span class="n">Lock</span>
 
 <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
-    <span class="o">...</span> <span class="n">do</span> <span class="n">something</span> <span class="n">using</span> <span class="s">"l"</span> <span class="o">...</span>
+    <span class="o">...</span> <span class="n">do</span> <span class="n">something</span> <span class="n">using</span> <span class="s2">&quot;l&quot;</span> <span class="o">...</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
         <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">lock</span><span class="p">,))</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></code></pre></figure>
@@ -115,18 +123,18 @@
 
 <p>multiprocessing原本无条件的叫做:</p>
 
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">fileno</span><span class="p">())</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">fileno</span><span class="p">())</span></code></pre></figure>
 
 <p>在multiprocessing.Process._bootstrap()中，这导致了进程中的问题。变成了:</p>
 
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">stdin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">O_RDONLY</span><span class="p">),</span> <span class="n">closefd</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">stdin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">O_RDONLY</span><span class="p">),</span> <span class="n">closefd</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span></code></pre></figure>
 
 <p>Which solves the fundamental issue of processes colliding with each other resulting in a bad file descriptor error, but introduces a potential danger to applications which replace sys.stdin() with a “file-like object” with output buffering. This danger is that if multiple processes call close() on this file-like object, it could result in the same data being flushed to the object multiple times, resulting in corruption.</p>
 
 <p>If you write a file-like object and implement your own caching, you can make it fork-safe by storing the pid whenever you append to the cache, and discarding the cache when the pid changes. For example:</p>
 
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="nd">@property</span>
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="nd">@property</span>
 <span class="k">def</span> <span class="nf">cache</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">pid</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">pid</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pid</span><span class="p">:</span>
@@ -156,24 +164,24 @@
 
 <p>例如，使用spawn或forkserver启动一个进程会有RuntimeError：</p>
 
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span>
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span>
 
 <span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
-    <span class="k">print</span><span class="p">(</span><span class="s">'hello'</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">)</span>
 
 <span class="n">p</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">foo</span><span class="p">)</span>
 <span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></code></pre></figure>
 
 <p>使用if __name__ == ‘__main__’:</p>
 
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span><span class="p">,</span> <span class="n">freeze_support</span><span class="p">,</span> <span class="n">set_start_method</span>
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span><span class="p">,</span> <span class="n">freeze_support</span><span class="p">,</span> <span class="n">set_start_method</span>
 
 <span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
-    <span class="k">print</span><span class="p">(</span><span class="s">'hello'</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">)</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">freeze_support</span><span class="p">()</span>
-    <span class="n">set_start_method</span><span class="p">(</span><span class="s">'spawn'</span><span class="p">)</span>
+    <span class="n">set_start_method</span><span class="p">(</span><span class="s1">&#39;spawn&#39;</span><span class="p">)</span>
     <span class="n">p</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">foo</span><span class="p">)</span>
     <span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></code></pre></figure>
 
@@ -201,3 +209,4 @@
     </footer>
 </body>
 </html>
+

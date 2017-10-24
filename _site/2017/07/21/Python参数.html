@@ -12,15 +12,23 @@
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
 </head>
 
+
+
+
 <body class = "site">
     <!-- header -->
     <header class="title">
-      <a class="extra" href="/mainPage">主页</a>
-      <a class="extra" href="/thoughtPage">嗯呢</a>
-      <a class="extra" href="/classifyPage">分类</a>
-      <a class="extra" href="/cv/sq.pdf">简历</a>
+  
+      <div id="navfirst">
+        <ul id="menu">
+          <li id="h"><a href="/mainPage" title="博客主页">主页</a></li>
+          <li id="b"><a href="/thoughtPage" title="随便写写">随笔</a></li>
+          <li id="s"><a href="/classifyPage" title="博文分类">分类</a></li>
+          <li id="d"><a href="/cv/sq.pdf" title="我的简历">简历</a></li>
+          </ul>
+        </div>
     </header>
-     
+  
     <div id="post">
 <p>Python *args and **kwargs</p>
 
@@ -28,28 +36,28 @@
 
 <h3 id="args参数作为tuple传入函数">*args参数作为tuple传入函数</h3>
 
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
         <span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 
 <span class="n">foo</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="c">#output：</span>
+<span class="c1">#output：</span>
 <span class="mi">1</span>
 
 <span class="n">foo</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
-<span class="c">#output:</span>
+<span class="c1">#output:</span>
 <span class="mi">1</span> 
 <span class="mi">2</span>
 <span class="mi">3</span></code></pre></figure>
 
 <h3 id="kwargs-将关键字参数作为dict">**kwargs 将关键字参数作为dict</h3>
 
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">bar</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="k">def</span> <span class="nf">bar</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
         <span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">kwargs</span><span class="p">[</span><span class="n">a</span><span class="p">])</span>
 
-<span class="n">bar</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'one'</span><span class="p">,</span><span class="n">age</span><span class="o">=</span><span class="mi">27</span><span class="p">)</span>
-<span class="c">#output:</span>
+<span class="n">bar</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;one&#39;</span><span class="p">,</span><span class="n">age</span><span class="o">=</span><span class="mi">27</span><span class="p">)</span>
+<span class="c1">#output:</span>
 <span class="n">age</span> <span class="mi">27</span>
 <span class="n">name</span> <span class="n">one</span></code></pre></figure>
 
@@ -57,15 +65,15 @@
 
 <h3 id="args和kwargs可以和普通参数一起用">*args和**kwargs可以和普通参数一起用</h3>
 
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">king</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">king</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">print</span><span class="p">(</span><span class="n">king</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
         <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
         <span class="k">print</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
 
-<span class="n">foo</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="s">'apple'</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="s">'banana'</span><span class="p">)</span>
-<span class="c">#output</span>
+<span class="n">foo</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="s1">&#39;apple&#39;</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="s1">&#39;banana&#39;</span><span class="p">)</span>
+<span class="c1">#output</span>
 <span class="mi">1</span>
 <span class="mi">2</span>
 <span class="mi">3</span>
@@ -75,13 +83,13 @@
 
 <h3 id="args另一个用法是调用函数时解析参数列表">*args另一个用法是调用函数时解析参数列表</h3>
 
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="n">lee</span><span class="p">):</span>
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="n">lee</span><span class="p">):</span>
     <span class="k">print</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span><span class="n">lee</span><span class="p">)</span>
 
 <span class="n">l</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
 <span class="n">foo</span><span class="p">(</span><span class="o">*</span><span class="n">l</span><span class="p">)</span>
 
-<span class="c">#output</span>
+<span class="c1">#output</span>
 <span class="mi">1</span> <span class="mi">2</span></code></pre></figure>
 
 
@@ -109,3 +117,4 @@
     </footer>
 </body>
 </html>
+

@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Multiprocessing Guildelines
+tags: [python]
 ---
 
 {{ page.title }}

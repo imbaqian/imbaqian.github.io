@@ -12,15 +12,23 @@
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
 </head>
 
+
+
+
 <body class = "site">
     <!-- header -->
     <header class="title">
-      <a class="extra" href="/mainPage">主页</a>
-      <a class="extra" href="/thoughtPage">嗯呢</a>
-      <a class="extra" href="/classifyPage">分类</a>
-      <a class="extra" href="/cv/sq.pdf">简历</a>
+  
+      <div id="navfirst">
+        <ul id="menu">
+          <li id="h"><a href="/mainPage" title="博客主页">主页</a></li>
+          <li id="b"><a href="/thoughtPage" title="随便写写">随笔</a></li>
+          <li id="s"><a href="/classifyPage" title="博文分类">分类</a></li>
+          <li id="d"><a href="/cv/sq.pdf" title="我的简历">简历</a></li>
+          </ul>
+        </div>
     </header>
-     
+  
     <div id="post">
 <p>求平方根</p>
 
@@ -58,7 +66,7 @@ x1=x0-(x0^2-a)/2x0=(x0+a/x0)/2</p>
 
 <p>代码为：</p>
 
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="nf">sqrt</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="kt">int</span> <span class="nf">sqrt</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
     <span class="kt">double</span> <span class="n">ans</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
     <span class="kt">double</span> <span class="n">Accuracy</span> <span class="o">=</span> <span class="mf">0.0001</span><span class="p">;</span>
     <span class="k">while</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">ans</span><span class="o">*</span><span class="n">ans</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">Accuracy</span><span class="p">){</span>
@@ -92,3 +100,4 @@ x1=x0-(x0^2-a)/2x0=(x0+a/x0)/2</p>
     </footer>
 </body>
 </html>
+
